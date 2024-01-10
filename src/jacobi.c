@@ -2,21 +2,22 @@
  *
  */
 #include <math.h>
-#include "jacobi.h"
-
-
-#define pow2(x) (x)*(x)
-
+#define f(x, y, z)                                                             \
+  ((1 <= x && x <= (-3.0 / 8) && 1 <= y && y <= (-1.0 / 2) &&                  \
+    (-2.0 / 3) <= z && z <= 0)                                                 \
+       ? 200                                                                   \
+       : 0)
+#define pow2(x) (x) * (x)
 
 int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
            int max_iterations, double tolerance) {
   int iter = 0;
-  double delta = 1.0 / N;
+  double delta = 1.0 / (N - 1);
   double distance = 0;
   do {
-    for (int i = 1; i < N; i++)
-      for (int j = 1; j < N; j++)
-        for (int k = 1; k < N; k++) {
+    for (int i = 1; i < N - 1; i++)
+      for (int j = 1; j < N - 1; j++)
+        for (int k = 1; k < N - 1; k++) {
           u_curr[i][j][k] =
               (1.0 / 6) *
               (u_prev[i - 1][j][k] + u_prev[i + 1][j][k] + u_prev[i][j - 1][k] +
@@ -33,3 +34,4 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
 
   return iter;
 }
+

@@ -50,6 +50,8 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
+  N += 2;
+
   // Initialize the arrays
   initialize_u(u_curr, N, start_T);
   initialize_u(u_prev, N, start_T);
