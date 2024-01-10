@@ -6,6 +6,7 @@
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 
 #ifdef _JACOBI
 #include "jacobi.h"
