@@ -40,22 +40,19 @@ int main(int argc, char *argv[]) {
   if (argc == 6) {
     output_type = atoi(argv[5]); // ouput type
   }
-  N += 2;
   // allocate memory
-  if ((u_curr = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
+  if ((u_curr = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
-  if ((u_prev = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
+  if ((u_prev = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
-  if ((f = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
+  if ((f = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
-
-  N += 2;
 
   // Initialize the arrays
   initialize_u(u_curr, N, start_T);

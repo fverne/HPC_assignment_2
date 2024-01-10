@@ -6,6 +6,16 @@
        ? 200                                                                   \
        : 0)
 
+void* emalloc(size_t size)
+{
+  void *ptr;
+  if ((ptr = malloc(sizeof(size))) == NULL) {
+    perror("Error: Allocating memory failed.");
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
 double u_value(int x, int y, int z, double start_T) {
   double value;
   if (x == 1 || x == -1 || y == 1 || z == 1 || z == -1)
@@ -15,16 +25,6 @@ double u_value(int x, int y, int z, double start_T) {
   else
     value = start_T;
   return value;
-}
-
-void* emalloc(size_t size)
-{
-  void *ptr;
-  if ((ptr = malloc(sizeof(size))) == NULL) {
-    perror("Error: Allocating memory failed.");
-    exit(EXIT_FAILURE);
-  }
-  return ptr;
 }
 
 void initialize_f(double ***f, int N) {
