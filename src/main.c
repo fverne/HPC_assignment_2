@@ -42,15 +42,15 @@ int main(int argc, char *argv[]) {
   }
   N += 2;
   // allocate memory
-  if ((u_curr = malloc_3d(N, N, N)) == NULL) {
+  if ((u_curr = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
-  if ((u_prev = malloc_3d(N, N, N)) == NULL) {
+  if ((u_prev = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
-  if ((f = malloc_3d(N, N, N)) == NULL) {
+  if ((f = malloc_3d(N + 2, N + 2, N + 2)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }

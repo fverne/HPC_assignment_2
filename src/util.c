@@ -1,6 +1,5 @@
 #include "util.h"
 
-<<<<<<< Updated upstream
 #define f(x, y, z)                                                             \
   ((1 <= x && x <= (-3.0 / 8) && 1 <= y && y <= (-1.0 / 2) &&                  \
     (-2.0 / 3) <= z && z <= 0)                                                 \
@@ -20,9 +19,6 @@ double u_value(int x, int y, int z, double start_T) {
 
 void* emalloc(size_t size)
 {
-=======
-void *emalloc(size_t size) {
->>>>>>> Stashed changes
   void *ptr;
   if ((ptr = malloc(sizeof(size))) == NULL) {
     perror("Error: Allocating memory failed.");
