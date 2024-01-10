@@ -6,7 +6,7 @@
        ? 200                                                                   \
        : 0)
 
-inline double u_value(int x, int y, int z, double start_T) {
+double u_value(int x, int y, int z, double start_T) {
   double value;
   if (x == 1 || x == -1 || y == 1 || z == 1 || z == -1)
     value = 20.0;

@@ -4,9 +4,9 @@
 #include "alloc3d.h"
 #include "print.h"
 #include "util.h"
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
 
 #ifdef _JACOBI
 #include "jacobi.h"
@@ -40,12 +40,17 @@ int main(int argc, char *argv[]) {
   if (argc == 6) {
     output_type = atoi(argv[5]); // ouput type
   }
+  N += 2;
   // allocate memory
   if ((u_curr = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
   if ((u_prev = malloc_3d(N, N, N)) == NULL) {
+    perror("array u: allocation failed");
+    exit(-1);
+  }
+  if ((f = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
   }
@@ -58,10 +63,17 @@ int main(int argc, char *argv[]) {
   initialize_f(f, N);
 
   itime = omp_get_wtime();
-  // call the jacobi here
+
+  #ifdef _JACOBI
+    jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
+  #endif
+  #ifdef _GAUSS_SEIDEL
+    // jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
+  #endif
+
   ftime = omp_get_wtime();
   exec_time = ftime - itime;
-  printf("wallclocktime for jacobi: %f", exec_time);
+  printf("Wallclocktime for jacobi: %f", exec_time);
 
   // dump  results if wanted
   switch (output_type) {

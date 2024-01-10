@@ -1,13 +1,8 @@
 /* jacobi.c - Poisson problem in 3d
  *
  */
+#include "jacobi.h"
 #include <math.h>
-#define f(x, y, z)                                                             \
-  ((1 <= x && x <= (-3.0 / 8) && 1 <= y && y <= (-1.0 / 2) &&                  \
-    (-2.0 / 3) <= z && z <= 0)                                                 \
-       ? 200                                                                   \
-       : 0)
-#define pow2(x) (x) * (x)
 
 int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
            int max_iterations, double tolerance) {
@@ -30,7 +25,7 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
         }
     ++iter;
     distance = sqrt(distance);
-  } while (iter < max_iterations || distance > tolerance);
+  } while (iter < max_iterations && distance > tolerance);
 
   return iter;
 }
