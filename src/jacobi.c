@@ -7,7 +7,7 @@
     (-2.0 / 3) <= z && z <= 0)                                                 \
        ? 200                                                                   \
        : 0)
-#define pow2(x) x*x
+#define pow2(x) (x)*(x)
 
 
 int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
