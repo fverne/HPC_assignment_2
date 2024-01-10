@@ -33,7 +33,8 @@ int main(int argc, char *argv[]) {
   double ***f = NULL;
   double itime, ftime, exec_time;
   /* get the paramters from the command line */
-  N = atoi(argv[1]);         // grid size
+  N = atoi(argv[1]);         // grid size, the number of total 
+                             // grid points in one dimension
   iter_max = atoi(argv[2]);  // max. no. of iterations
   tolerance = atof(argv[3]); // tolerance
   start_T = atof(argv[4]);   // start T for all inner grid points
