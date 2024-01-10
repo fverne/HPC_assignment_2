@@ -8,6 +8,8 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
            int max_iterations, double tolerance) {
   int iter = 0;
   double delta = 2.0 / (N - 1);
+  double fraction = (1.0 / 6);
+  double delta_2 = pow2(delta);
   double distance;
   do {
     distance = 0;
@@ -15,10 +17,10 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
       for (int j = 1; j < N - 1; j++)
         for (int k = 1; k < N - 1; k++) {
           u_curr[i][j][k] =
-              (1.0 / 6) *
+              fraction *
               (u_prev[i - 1][j][k] + u_prev[i + 1][j][k] + u_prev[i][j - 1][k] +
                u_prev[i][j + 1][k] + u_prev[i][j][k - 1] + u_prev[i][j][k + 1] +
-               pow2(delta) * f[i][j][k]);
+               delta_2 * f[i][j][k]);
           // distance
           distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
           // copy

@@ -3,7 +3,7 @@
  */
 #ifndef _GAUSS_SEIDEL_H
 #define _GAUSS_SEIDEL_H
-
+#include "util.h"
 // define your function prototype here
 // gauss_seidel(...);
 

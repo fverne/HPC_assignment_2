@@ -21,19 +21,20 @@
 int main(int argc, char *argv[]) {
 
   int N = N_DEFAULT;
+  int iter = 0;
   int iter_max = 1000;
   double tolerance;
   double start_T;
   int output_type = 0;
-  char *output_prefix = "poisson_res";
+  char *output_prefix;
   char *output_ext = "";
   char output_filename[FILENAME_MAX];
   double ***u_curr = NULL;
   double ***u_prev = NULL;
   double ***f = NULL;
   double itime, ftime, exec_time;
-  /* get the paramters from the command line */
-  N = atoi(argv[1]);         // grid size, the number of total 
+  /* get the parameters from the command line */
+  N = atoi(argv[1]);         // grid size, the number of total
                              // grid points in one dimension
   iter_max = atoi(argv[2]);  // max. no. of iterations
   tolerance = atof(argv[3]); // tolerance
@@ -62,32 +63,41 @@ int main(int argc, char *argv[]) {
 
   itime = omp_get_wtime();
 
-  #ifdef _JACOBI
-    jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
-  #endif
-  #ifdef _GAUSS_SEIDEL
-    // jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
-  #endif
+#ifdef _JACOBI
+  iter = jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
+  output_prefix = "jacobi";
+#endif
+#ifdef _GAUSS_SEIDEL
+  iter = gauss_seidel(u_curr, u_prev, f, N, iter_max, tolerance);
+  output_prefix = "gauss_seidel";
+#endif
 
   ftime = omp_get_wtime();
   exec_time = ftime - itime;
-  printf("Wallclocktime for jacobi: %f", exec_time);
 
-  // dump  results if wanted
+  printf("=====================Info=====================\n");
+  printf("N:\t\t\t\t\t%d\n", N);
+  printf("Tolerance:\t\t\t\t%f\n", tolerance);
+  printf("Max iterations:\t\t\t\t%d\n", iter_max);
+  printf("Time:\t\t\t\t\t%f\n", exec_time);
+  printf("Number of iterations:\t\t\t%d\n", iter);
+  printf("Number of iterations per second:\t%f\n", iter / exec_time);
+
   switch (output_type) {
   case 0:
-    // no output at all
     break;
   case 3:
     output_ext = ".bin";
-    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-    fprintf(stderr, "Write binary dump to %s: ", output_filename);
+    sprintf(output_filename, "%s_N%d_T%.8f_I%d%s", output_prefix, N, tolerance,
+            iter_max, output_ext);
+    fprintf(stderr, "Wrote binary dump to %s\n.", output_filename);
     print_binary(output_filename, N, u_curr);
     break;
   case 4:
     output_ext = ".vtk";
-    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-    fprintf(stderr, "Write VTK file to %s: ", output_filename);
+    sprintf(output_filename, "%s_N%d_T%.8f_I%d%s", output_prefix, N, tolerance,
+            iter_max, output_ext);
+    fprintf(stderr, "Wrote VTK file to %s.\n", output_filename);
     print_vtk(output_filename, N, u_curr);
     break;
   default:
@@ -98,6 +108,7 @@ int main(int argc, char *argv[]) {
   // de-allocate memory
   free_3d(u_curr);
   free_3d(u_prev);
-
+  free_3d(f);
+  
   return (0);
 }

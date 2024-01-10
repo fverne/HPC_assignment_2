@@ -13,6 +13,8 @@ OBJS_GS	= $(MAIN_GS) gauss_seidel.o
 # options and settings for the GCC compilers
 #
 CC	= gcc
+# add O3 or other optimization here
+XOPTS = 
 DEFS	= 
 OPT	= -g -fopenmp
 IPO	= 
