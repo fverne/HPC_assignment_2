@@ -6,9 +6,9 @@
 #include "alloc3d.h"
 #include "print.h"
 
-#ifdef _JACOBI
+// #ifdef _JACOBI
 #include "jacobi.h"
-#endif
+// #endif
 
 #ifdef _GAUSS_SEIDEL
 #include "gauss_seidel.h"
@@ -44,13 +44,6 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
-
-    /*
-     *
-     * fill in your code here 
-     *
-     *
-     */
 
     // dump  results if wanted 
     switch(output_type) {
