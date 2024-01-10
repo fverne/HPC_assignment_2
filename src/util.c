@@ -28,12 +28,11 @@ double u_value(int x, int y, int z, double start_T) {
 }
 
 void initialize_f(double ***f, int N) {
-  double delta = 1.0 / (N - 1);
+  double delta = (1.0 - (-1.0)) / (N - 1);
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
       for (int k = 0; k < N; k++) {
-        // mapping of i, j, k
-        // we know that x, y, z are in the range of {-1, 1}
+        // map indices in f to (-1, -1) for x, y, z
         double x = -1 + (i * delta);
         double y = -1 + (j * delta);
         double z = -1 + (k * delta);
@@ -42,7 +41,7 @@ void initialize_f(double ***f, int N) {
 }
 
 void initialize_u(double ***u, int N, int start_T) {
-  double delta = 1.0 / (N - 1);
+  double delta = (1.0 - (-1.0)) / (N - 1);
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
       for (int k = 0; k < N; k++) {
