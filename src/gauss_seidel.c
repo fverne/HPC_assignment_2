@@ -12,7 +12,7 @@
 int gauss_seidel(double ***u_curr, double ***u_prev, double ***f, int N,
                  int max_iterations, double tolerance) {
   int iter = 0;
-  double delta = 1.0 / (N - 1);
+  double delta = 2.0 / (N - 1);
   double distance = 0;
   do {
     for (int i = 1; i < N - 1; i++)
@@ -24,7 +24,7 @@ int gauss_seidel(double ***u_curr, double ***u_prev, double ***f, int N,
                u_prev[i][j + 1][k] + u_curr[i][j][k - 1] + u_prev[i][j][k + 1] +
                delta * delta * f[i][j][k]);
           // distance
-          distance += pow2(fabs(u_prev[i][j][k] - u_curr[i][j][k]));
+          distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
           // copy
           u_prev[i][j][k] = u_curr[i][j][k];
         }

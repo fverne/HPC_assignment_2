@@ -22,7 +22,7 @@ double u_value(int x, int y, int z, double start_T) {
 }
 
 void initialize_f(double ***f, int N) {
-  double delta = (1.0 - (-1.0)) / (N - 1);
+  double delta = 2.0 / (N - 1);
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
       for (int k = 0; k < N; k++) {
@@ -35,7 +35,7 @@ void initialize_f(double ***f, int N) {
 }
 
 void initialize_u(double ***u, int N, int start_T) {
-  double delta = (1.0 - (-1.0)) / (N - 1);
+  double delta = 2.0 / (N - 1);
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
       for (int k = 0; k < N; k++) {
