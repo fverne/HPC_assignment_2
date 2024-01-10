@@ -77,7 +77,8 @@ int main(int argc, char *argv[]) {
   }
 
   // de-allocate memory
-  free_3d(u);
-  free(iter);
+  free_3d(u_curr);
+  free_3d(u_prev);
+
   return (0);
 }

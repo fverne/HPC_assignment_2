@@ -11,32 +11,36 @@
 int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
            int max_iterations, double tolerance) {
   // It's up to us if we return iterations or some error indicating value
-  int iter;
+  int iter = 0;
   double delta = 1.0 / N;
-  // and a do while here
-  do {
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++)
-        for (int k = 0; k < N; k++) {
-          double x = -1 + i * delta;
-          double y = -1 + j * delta;
-          double z = -1 + k * delta;
 
+  do {
+    for (int i = 1; i < N; i++) {
+      for (int j = 1; j < N; j++) {
+        for (int k = 1; k < N; k++) {
           u_curr[i][j][k] =
               (1.0 / 6) *
               (u_prev[i - 1][j][k] + u_prev[i + 1][j][k] + u_prev[i][j - 1][k] +
                u_prev[i][j + 1][k] + u_prev[i][j][k - 1] + u_prev[i][j][k + 1] +
-               pow(delta, 2) * f(x, y, z));
+               delta * delta * f[i][j][k]);
         }
-    // calculate the distance here
+      }
+    }
+    // calculate distance
 
-  } while (iter < max_iterations &&);
+    // coppy u_curr to u_prev
+    for (int i = 1; i < N; i++)
+      for (int j = 1; j < N; j++)
+        for (int k = 1; k < N; k++)
+          u_prev[i][j][k] = u_curr[i][j][k];
+
+    ++iter;
+  } while (iter < max_iterations && /* tolerance check */);
 
   return iter;
 }
 
 void initialize_f(double ***f, int N) {
-  // uniform
   double delta = 1.0 / N;
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
@@ -58,6 +62,7 @@ void initialize_u(double ***u, int N, int start_T) {
         double x = -1 + i * delta;
         double y = -1 + j * delta;
         double z = -1 + k * delta;
+        // maybe also this as a macro
         if (x == 1 || x == -1 || y == 1 || z == 1 || z == -1)
           u[i][j][k] = 20;
         else if (y == -1)
