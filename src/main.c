@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
   double ***u_curr = NULL;
   double ***u_prev = NULL;
   double ***f = NULL;
+  double itime, ftime, exec_time;
   /* get the paramters from the command line */
   N = atoi(argv[1]);         // grid size
   iter_max = atoi(argv[2]);  // max. no. of iterations
@@ -52,7 +53,11 @@ int main(int argc, char *argv[]) {
   initialize_u(u_prev, N, start_T);
   initialize_f(f);
 
+  itime = omp_get_wtime();
   // call the jacobi here
+  ftime = omp_get_wtime();
+  exec_time = ftime - itime;
+  printf("wallclocktime for jacobi: %f", exec_time);
 
   // dump  results if wanted
   switch (output_type) {
