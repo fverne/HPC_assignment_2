@@ -20,7 +20,7 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
                u_prev[i][j + 1][k] + u_prev[i][j][k - 1] + u_prev[i][j][k + 1] +
                pow2(delta) * f[i][j][k]);
           // distance
-          distance += pow2(fabs(u_prev[i][j][k] - u_curr[i][j][k]));
+          distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
           // copy
           u_prev[i][j][k] = u_curr[i][j][k];
         }
