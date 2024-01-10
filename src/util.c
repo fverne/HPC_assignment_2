@@ -50,6 +50,6 @@ void initialize_u(double ***u, int N, int start_T) {
         double y = -1 + (j * delta);
         double z = -1 + (k * delta);
         // maybe also this as a macro
-        u[i][j][k] = u_value(start_T, x, y, z);
+        u[i][j][k] = u_value(x, y, z, start_T);
       }
 }
