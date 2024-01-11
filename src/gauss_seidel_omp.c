@@ -38,18 +38,20 @@ int gauss_seidel_omp_block(double ***u_curr, double ***f, int N, int max_iterati
   double fraction = (1.0 / 6);
   double delta_2 = pow2(delta);
   // Arbitrary size for the blocks (we have to think what's a good block size)
-  int TS = 32;
+  int TS = 8;
 
   for (iter = 0; iter < max_iterations; iter++) {
     int jj, kk, ii; 
-    #pragma omp for schedule(static, 1) private(ii, jj, kk)
+    int i, j, k;
+    #pragma omp for schedule(static, 1) private(ii, jj, kk, i, j, k)
+    // #pragma omp parallel
     for (ii = 1; ii < N - 1; ii += TS) {
       for (jj = 1; jj < N - 1; jj += TS) {
         for (kk = 1; kk < N - 1; kk += TS) {
           int imax = ((ii + TS) < N - 1) ? (ii + TS) : (N - 1);
           int jmax = ((jj + TS) < N - 1) ? (jj + TS) : (N - 1);
           int kmax = ((kk + TS) < N - 1) ? (kk + TS) : (N - 1);
-          int i, j, k;
+          // int i, j, k;
           // #pragma omp for ordered(3) private(i, j, k)
           for (i = ii; i < imax; ++i) {
             for (j = jj; j < jmax; ++j) {

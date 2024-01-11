@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef _GAUSS_SEIDEL_OMP
-  iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
-  // iter = gauss_seidel_omp_block(u_curr, f, N, iter_max, tolerance);
+  // iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
+  iter = gauss_seidel_omp_block(u_curr, f, N, iter_max, tolerance);
 #endif
 
   ftime = omp_get_wtime();
