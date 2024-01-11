@@ -34,15 +34,15 @@ int main(int argc, char *argv[]) {
   double ***f = NULL;
   double itime, ftime, exec_time;
   /* get the parameters from the command line */
-  N = atoi(argv[1]);         // grid size, the number of total
-                             // grid points in one dimension
-  iter_max = atoi(argv[2]);  // max. no. of iterations
-  tolerance = atof(argv[3]); // tolerance
-  start_T = atof(argv[4]);   // start T for all inner grid points
+  N = atoi(argv[1]);         /* grid size, the number of total */
+                             /* grid points in one dimension */
+  iter_max = atoi(argv[2]);  /* max. no. of iterations */
+  tolerance = atof(argv[3]); /* tolerance */
+  start_T = atof(argv[4]);   /* start T for all inner grid points */
   if (argc == 6) {
-    output_type = atoi(argv[5]); // ouput type
+    output_type = atoi(argv[5]); /* ouput type */
   }
-  // allocate memory
+  /* allocate memory */
   if ((u_curr = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
@@ -56,24 +56,36 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
-  // Initialize the arrays
+  /* Initialize the arrays */
   initialize_u(u_curr, N, start_T);
-  initialize_u(u_prev, N, start_T);
   initialize_f(f, N);
 
+/* initialize prev for jacobi as well */
+#ifdef _JACOBI
+  initialize_u(u_prev, N, start_T);
+#endif
+/* start the timing for the functions */
   itime = omp_get_wtime();
 
 #ifdef _JACOBI
   iter = jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
-  output_prefix = "jacobi";
 #endif
+
 #ifdef _GAUSS_SEIDEL
-  iter = gauss_seidel(u_curr, u_prev, f, N, iter_max, tolerance);
-  output_prefix = "gauss_seidel";
+  iter = gauss_seidel(u_curr, f, N, iter_max, tolerance);
 #endif
 
   ftime = omp_get_wtime();
   exec_time = ftime - itime;
+
+#ifdef _JACOBI
+  output_prefix = "jacobi";
+  free_3d(u_prev);
+#endif
+
+#ifdef _GAUSS_SEIDEL
+  output_prefix = "gauss_seidel";
+#endif
 
   printf("=====================Info=====================\n");
   printf("N:\t\t\t\t\t%d\n", N);
@@ -105,10 +117,9 @@ int main(int argc, char *argv[]) {
     break;
   }
 
-  // de-allocate memory
+  /* de-allocate memory */
   free_3d(u_curr);
-  free_3d(u_prev);
   free_3d(f);
-  
+
   return (0);
 }

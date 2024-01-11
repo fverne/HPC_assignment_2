@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/zsh
 
-# TODO: 
+# TODO:
 # - Add bsub
 # - Add bigger numbers
 
@@ -33,31 +33,33 @@ TOLERANCE_DEF=0.00001
 GRID_DEF=50
 
 for GRID in "${GRID_VALUES[@]}"; do
-  ./poisson_j $GRID $ITERATIONS_DEF $GRID_DEF 0.0 4 >>"logs/grid_j.log"
-  ./poisson_gs $GRID $ITERATIONS_DEF $GRID_DEF 0.0 4 >>"logs/grid_gs.log"
-  ./poisson_j $GRID $ITERATIONS_DEF $GRID_DEF 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $GRID $ITERATIONS_DEF $GRID_DEF 0.0 3 >/dev/null 2>&1
+  ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_j.log"
+  ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_gs.log"
+  ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
+  ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
 done
 
 for TOLERANCE in "${TOLERANCE_VALUES[@]}"; do
-  ./poisson_j $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_j.log"
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_gs.log"
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
+  ./poisson_j  $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_j.log"
+  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_gs.log"
+  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
+  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
 done
 
 # zip logs
 zip -r "logs_$(date +'%Y%m%d_%H%M%S').zip" logs
 
+echo "$(pwd)"
 # create output dirs
 mkdir -p "ouput/vtk"
 mkdir -p "ouput/bin"
 mkdir -p "ouput/zip"
 
 # move output files to the output dirs
-mv *.zip "output/zip"
-mv *.bin "output/bin"
-mv *.vtk "output/vtk"
+
+mv $(fd .zip) "$(pwd)output/zip"
+mv $(fd .bin) "$(pwd)/output/bin"
+mv $(fd .vtk) "$(pwd)/output/vtk"
 
 # check sequential with bin version!
 # UNIQ=$(md5sum *.bin | uniq -c | wc -l)
