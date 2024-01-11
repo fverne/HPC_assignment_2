@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # TODO:
 # - Add bsub
@@ -22,6 +22,8 @@ GRID_VALUES=(
 
 # go to source dir
 cd "src"
+# remove any trash from other runs
+rm *.bin *.vtk
 # create logs dir if doesn't exist
 rm -rf "logs"
 mkdir -p "logs"
