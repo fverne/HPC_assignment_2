@@ -12,10 +12,10 @@ int jacobi_omp(
   int iter = 0;
   double delta = 2.0 / (N - 1);
   double distance;
+  double t;
   do {
     distance = 0;
-
-    #pragma omp parallel for reduction(+:distance) 
+    #pragma omp parallel for private(t) reduction(+:distance) 
     for (int i = 1; i < N - 1; i++)
       for (int j = 1; j < N - 1; j++)
         for (int k = 1; k < N - 1; k++) {
@@ -24,14 +24,25 @@ int jacobi_omp(
               (u_prev[i - 1][j][k] + u_prev[i + 1][j][k] + u_prev[i][j - 1][k] +
                u_prev[i][j + 1][k] + u_prev[i][j][k - 1] + u_prev[i][j][k + 1] +
                pow2(delta) * f[i][j][k]);
-          distance += pow2(u_prev[i][j][k] - update_value);
           u_curr[i][j][k] = update_value;
-          u_prev[i][j][k] = u_curr[i][j][k];
+          t = pow2(u_prev[i][j][k] - update_value);
+          distance += t;
     } // Parallel region ends here
+
+    double ***tmp = u_prev;           
+    u_prev = u_curr;
+    u_curr = tmp;
 
     ++iter;
     distance = sqrt(distance);
   } while (iter < iter_max && distance > tolerance);
+
+  // check the odd/even of iterations
+  if (iter % 2 == 0) {
+    double ***tmp = u_prev;           
+    u_prev = u_curr;
+    u_curr = tmp;
+  }  
 
   return iter;
 }

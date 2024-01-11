@@ -23,12 +23,22 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
                delta_2 * f[i][j][k]);
           // distance
           distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
-          // copy
-          u_prev[i][j][k] = u_curr[i][j][k];
         }
+    
+    double ***tmp = u_prev;           
+    u_prev = u_curr;
+    u_curr = tmp;
+
     ++iter;
     distance = sqrt(distance);
   } while (iter < max_iterations && distance > tolerance);
+
+  // check the odd/even of iterations
+  if (iter % 2 == 0) {
+    double ***tmp = u_prev;           
+    u_prev = u_curr;
+    u_curr = tmp;
+  }  
 
   return iter;
 }
