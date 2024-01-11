@@ -11,6 +11,7 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
   double fraction = (1.0 / 6);
   double delta_2 = pow2(delta);
   double distance;
+  double u_prev_value;
   do {
     distance = 0;
     for (int i = 1; i < N - 1; i++)
@@ -23,12 +24,20 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
                delta_2 * f[i][j][k]);
           // distance
           distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
-          // copy
-          u_prev[i][j][k] = u_curr[i][j][k];
+          // swap pointers
         }
+    double ***temp = u_prev;
+    u_prev = u_curr;
+    u_curr = temp;
+
     ++iter;
     distance = sqrt(distance);
   } while (iter < max_iterations && distance > tolerance);
 
+  if (iter % 2 == 0) {
+    double ***temp = u_prev;
+    u_prev = u_curr;
+    u_curr = temp;
+  }
   return iter;
 }

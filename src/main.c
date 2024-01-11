@@ -16,6 +16,10 @@
 #include "gauss_seidel.h"
 #endif
 
+#ifdef _GAUSS_SEIDEL_OMP
+#include "gauss_seidel_omp.h"
+#endif
+
 #define N_DEFAULT 100
 
 int main(int argc, char *argv[]) {
@@ -64,7 +68,7 @@ int main(int argc, char *argv[]) {
 #ifdef _JACOBI
   initialize_u(u_prev, N, start_T);
 #endif
-/* start the timing for the functions */
+  /* start the timing for the functions */
   itime = omp_get_wtime();
 
 #ifdef _JACOBI
@@ -73,6 +77,11 @@ int main(int argc, char *argv[]) {
 
 #ifdef _GAUSS_SEIDEL
   iter = gauss_seidel(u_curr, f, N, iter_max, tolerance);
+#endif
+
+#ifdef _GAUSS_SEIDEL_OMP
+  iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
+  // iter = gauss_seidel_omp_block(u_curr, f, N, iter_max, tolerance);
 #endif
 
   ftime = omp_get_wtime();
@@ -87,6 +96,14 @@ int main(int argc, char *argv[]) {
   output_prefix = "gauss_seidel";
 #endif
 
+#ifdef _JACOBI_OMP
+  output_prefix = "jacobi_omp";
+#endif
+
+#ifdef _GAUSS_SEIDEL_OMP
+  output_prefix = "gauss_seidel_omp";
+#endif
+
   printf("=====================Info=====================\n");
   printf("N:\t\t\t\t\t%d\n", N);
   printf("Tolerance:\t\t\t\t%f\n", tolerance);
@@ -94,6 +111,17 @@ int main(int argc, char *argv[]) {
   printf("Time:\t\t\t\t\t%f\n", exec_time);
   printf("Number of iterations:\t\t\t%d\n", iter);
   printf("Number of iterations per second:\t%f\n", iter / exec_time);
+
+#if defined(_JACOBI_OMP) || defined(_GAUSS_SEIDEL_OMP)
+  // Number of threads here (take value from make or smth)
+#pragma omp parallel
+  {
+    int num_threads = omp_get_num_threads();
+#pragma omp master
+    { printf("Number of threads:\t\t\t%d\n", num_threads); }
+  }
+
+#endif
 
   switch (output_type) {
   case 0:
