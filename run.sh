@@ -57,12 +57,12 @@ mkdir -p "ouput/zip"
 
 # move output files to the output dirs
 
-mv $(fd .zip) "$(pwd)output/zip"
+mv $(fd .zip) "$(pwd)/output/zip"
 mv $(fd .bin) "$(pwd)/output/bin"
 mv $(fd .vtk) "$(pwd)/output/vtk"
 
-check sequential with bin version!
-UNIQ=$(md5sum *.bin | uniq -c | wc -l)
-ALL=$(ls *.bin | wc -l)
-echo -e "Unique files: ${UNIQ}"
-echo -e "Total files: ${ALL}"
+# check sequential with bin version!
+# UNIQ=$(md5sum *.bin | uniq -c | wc -l)
+# ALL=$(ls *.bin | wc -l)
+# echo -e "Unique files: ${UNIQ}"
+# echo -e "Total files: ${ALL}"
