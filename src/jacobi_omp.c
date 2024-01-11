@@ -16,7 +16,11 @@ int jacobi_omp(
   #pragma omp parallel private(t) 
   {
     do {
-      distance = 0;
+      // printf("Thread: %d do while begins here\n", omp_get_thread_num());
+      #pragma omp barrier 
+      {
+        distance = 0;
+      }
       #pragma omp for reduction(+:distance) 
       for (int i = 1; i < N - 1; i++)
         for (int j = 1; j < N - 1; j++)
@@ -40,6 +44,11 @@ int jacobi_omp(
         ++iter;
         distance = sqrt(distance);
       }
+      // printf("Thread %d is done, iter; %d, with distance: %f\n", \
+      //   omp_get_thread_num(), \
+      //   iter, \
+      //   distance
+      // );
     } while (iter < iter_max && distance > tolerance);
   }
 
