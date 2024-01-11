@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   output_prefix = "gauss_seidel";
 #endif
 #ifdef _JACOBI_OMP
-  jacobi_omp(u_curr, u_prev, f, N, iter_max, tolerance);
+  iter = jacobi_omp(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "jacobi_omp";
 #endif
 #ifdef _GAUSS_SEIDEL_OMP
