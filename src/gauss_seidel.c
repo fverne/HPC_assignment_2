@@ -22,9 +22,6 @@ int gauss_seidel(double ***u_curr, double ***u_prev, double ***f, int N,
               1][k] +
                u_prev[i][j + 1][k] + u_curr[i][j][k - 1] + u_prev[i][j][k +
                1] + delta_2 * f[i][j][k]);
-              // (u_curr[i - 1][j][k] + u_curr[i + 1][j][k] + u_curr[i][j - 1][k] +
-              //  u_curr[i][j + 1][k] + u_curr[i][j][k - 1] + u_curr[i][j][k + 1] +
-              //  delta_2 * f[i][j][k]);
           // distance
           distance += pow2(u_prev[i][j][k] - u_curr[i][j][k]);
           // copy

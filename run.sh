@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# TODO: Add bsub
+# TODO: 
+# - Add bsub
+# - Add bigger numbers
 
 TOLERANCE_VALUES=(
   0.0000001
