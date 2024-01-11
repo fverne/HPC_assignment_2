@@ -6,6 +6,8 @@
 #ifndef _JACOBI_OMP_H
 #define _JACOBI_OMP_H
 
-int jacobi_omp(double ***u_curr, double ***u_prev, double ***f, int N, int iter_max, double tolerance);
+int jacobi_omp(
+    double ***u_curr, double ***u_prev, double ***f, 
+    int N, int iter_max, double tolerance);
 
 #endif
