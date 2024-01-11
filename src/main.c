@@ -16,6 +16,10 @@
 #include "gauss_seidel.h"
 #endif
 
+#ifdef _JACOBI_OMP
+#include "jacobi_omp.h"
+#endif
+
 #define N_DEFAULT 100
 
 int main(int argc, char *argv[]) {
@@ -70,6 +74,10 @@ int main(int argc, char *argv[]) {
 #ifdef _GAUSS_SEIDEL
   iter = gauss_seidel(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "gauss_seidel";
+#endif
+#ifdef _JACOBI_OMP
+  jacobi_omp(u_curr, u_prev, f, N, iter_max, tolerance);
+  output_prefix = "jacobi_omp";
 #endif
 
   ftime = omp_get_wtime();
