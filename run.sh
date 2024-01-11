@@ -51,15 +51,14 @@ zip -r "logs_$(date +'%Y%m%d_%H%M%S').zip" logs
 
 echo "$(pwd)"
 # create output dirs
-mkdir -p "ouput/vtk"
-mkdir -p "ouput/bin"
-mkdir -p "ouput/zip"
+mkdir -p "output/vtk"
+mkdir -p "output/bin"
+mkdir -p "output/zip"
 
 # move output files to the output dirs
-
-mv $(fd .zip) "$(pwd)/output/zip"
-mv $(fd .bin) "$(pwd)/output/bin"
-mv $(fd .vtk) "$(pwd)/output/vtk"
+mv *.zip "output/zip"
+mv *.bin "output/bin"
+mv *.vtk "output/vtk"
 
 # check sequential with bin version!
 # UNIQ=$(md5sum *.bin | uniq -c | wc -l)
