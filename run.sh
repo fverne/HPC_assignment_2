@@ -42,6 +42,8 @@ THREAD_VALUES=(
 
 # go to source dir
 cd "src"
+# remove any trash from other runs
+rm *.bin *.vtk
 # create logs dir if doesn't exist
 mkdir -p "logs"
 # remove previous logs
@@ -76,6 +78,7 @@ done
 # zip logs
 zip -r "logs_$(date +'%Y%m%d_%H%M%S').zip" logs
 
+echo "$(pwd)"
 # create output dirs
 mkdir -p "output/vtk"
 mkdir -p "output/bin"
