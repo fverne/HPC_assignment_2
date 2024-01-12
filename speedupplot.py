@@ -20,7 +20,7 @@ def read_data(datafile: str):
                 continue
 
             parts = line.strip().split()
-            data_point = [float(parts[4]), float(parts[2])]
+            data_point = [float(parts[5]), float(parts[2])]
             data.append(data_point)
     return data
 
@@ -52,24 +52,27 @@ if __name__ == "__main__":
     args = parser.parse_args()
     caches = list(zip(['L1', 'L2', 'L3'], [args.L1, args.L2, args.L3]))
 
-    ax = plt.subplot(111)
+    ax = plt.twinx()
 
+    width=1
+    spacing=0.0
     # read the data file and plot
-    for file in args.files:
+    for file, label in zip(args.files, args.labels):
         data = read_data(file)         
         # plot the memory hierarchy diagram 
         mem_size = [pair[0] for pair in data]
         flops = [pair[1] for pair in data]
-
+        
         #amdahl
         speedups = [flops[0]/time for time in flops]
-        ax.bar(mem_size, flops, width=0.2, color='red', align='center', label="speed") 
-        ax2 = ax.twinx()
-        ax2.plot(mem_size, speedups, marker='o', color='pink', linestyle='-', label="speedup")  
+        plt.bar(mem_size, flops, width=width, align='center', label=label) 
+        plt.plot(mem_size, speedups, marker='o', linestyle='-', label=label+" speedup")
+        spacing+2
+     
 
-    ax.set_xlabel('Number of Cores')
-    ax.set_ylabel('Runtime [Secs]')
-    ax2.set_ylabel("Speedup")
+    plt.xlabel('Number of Cores')
+    plt.ylabel('Runtime [Secs]')
+    ax.set_ylabel("Speedup")
 
     # for label, cache in caches:
     #     plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
@@ -86,10 +89,7 @@ if __name__ == "__main__":
     plt.gca().set_xlim(xlim)
 
     plt.grid()
-    ax.legend(args.labels, loc='upper center', bbox_to_anchor=(0.5, 1.05),
-          ncol=3, fancybox=True, shadow=True)
-    ax2.legend(args.labels, loc='upper center', bbox_to_anchor=(0.5, 1.05),
-          ncol=3, fancybox=True, shadow=True)
+    plt.legend()
     plt.title(args.title)
     # plt.show()
     plt.savefig(args.name)

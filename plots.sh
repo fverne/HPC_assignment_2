@@ -19,8 +19,9 @@ python3 iterationspersecplot.py \
 
 python3 speedupplot.py \
     "src/data/threads_jomp.dat" \
+    "src/data/threads_gsomp.dat" \
     -l \
     "jacobi (OMP) Baseline" \
-    "jacobi (OMP) Speedup" \
+    "gauss-seidel (OMP) Baseline" \
     -n plots/speedupplot.png \
     -t "Speedup Comparison (N = 100)"

@@ -20,7 +20,7 @@ def read_data(datafile: str):
                 continue
             
             parts = line.strip().split()
-            data_point = [float(parts[2]), float(parts[1])]
+            data_point = [float(parts[1]), float(parts[2])]
             data.append(data_point)
     return data
 
