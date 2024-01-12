@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
   printf("Time:\t\t\t\t\t%f\n", exec_time);
   printf("Number of iterations:\t\t\t%d\n", iter);
   printf("Number of iterations per second:\t%f\n", iter / exec_time);
+  printf("Number of threads:\t%d\n", omp_get_max_threads());
 
   switch (output_type) {
   case 0:
