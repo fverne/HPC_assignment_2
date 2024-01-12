@@ -64,11 +64,11 @@ int main(int argc, char *argv[]) {
   initialize_u(u_curr, N, start_T);
   initialize_f(f, N);
 
-/* initialize prev for jacobi as well */
+/* Initialize prev for jacobi as well */
 #ifdef _JACOBI
   initialize_u(u_prev, N, start_T);
 #endif
-  /* start the timing for the functions */
+  /* Start the timing for the functions */
   itime = omp_get_wtime();
 
 #ifdef _JACOBI
@@ -80,8 +80,9 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef _GAUSS_SEIDEL_OMP
-  // iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
-  iter = gauss_seidel_omp_block(u_curr, f, N, iter_max, tolerance);
+  iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
+  /* We didn't implement the block one in the end */
+  /* iter = gauss_seidel_omp_block(u_curr, f, N, iter_max, tolerance); */
 #endif
 
   ftime = omp_get_wtime();
@@ -113,7 +114,7 @@ int main(int argc, char *argv[]) {
   printf("Number of iterations per second:\t%f\n", iter / exec_time);
 
 #if defined(_JACOBI_OMP) || defined(_GAUSS_SEIDEL_OMP)
-  // Number of threads here (take value from make or smth)
+  /* Number of threads here (trick to get the # of threads) */
 #pragma omp parallel
   {
     int num_threads = omp_get_num_threads();
@@ -145,7 +146,7 @@ int main(int argc, char *argv[]) {
     break;
   }
 
-  /* de-allocate memory */
+  /* De-allocate memory */
   free_3d(u_curr);
   free_3d(f);
 
