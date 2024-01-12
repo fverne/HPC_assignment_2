@@ -70,8 +70,6 @@ if __name__ == "__main__":
         # plot the memory hierarchy diagram 
         mem_size.append([pair[0]+spacing for pair in data])
         flops.append([pair[1] for pair in data])
-        labels.append(label)
-        labels.append(label+" speedup")
         intermediate_mem_size = [pair[0]+spacing*0.5 for pair in data]
         
         #amdahl
@@ -79,6 +77,10 @@ if __name__ == "__main__":
         spacing+=0.5
         iterator+=1
 
+    labels.append("Jacobi (OMP)")
+    labels.append("Gauss-Seidel (OMP)")
+    labels.append("Jacobi (OMP) Speedup")
+    labels.append("Gauss-Seidel (OMP) Speedup")
 
     ax1.bar(mem_size[0], flops[0], width=width, color='b', align='center')
     ax1.bar(mem_size[1], flops[1], width=width, color='g', align='center')

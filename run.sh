@@ -53,12 +53,12 @@ rm -f logs/*.log
 # no real meaning behind these values for now
 ITERATIONS_DEF=10000
 TOLERANCE_DEF=0.0001
-GRID_DEF=50 # temporary, change me
+GRID_DEF=100
 
 for THREAD in "${THREAD_VALUES[@]}"; do
   export OMP_NUM_THREADS=${THREAD:-1}
-  ./poisson_jomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/threads_jomp.log"
-  ./poisson_gsomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/threads_gsomp.log"
+  ./poisson_jomp $GRID_DEF $ITERATIONS_DEF -1.0 0.0 4 >>"logs/threads_jomp.log"
+  ./poisson_gsomp $GRID_DEF $ITERATIONS_DEF -1.0 0.0 4 >>"logs/threads_gsomp.log"
   export OMP_NUM_THREADS=1
 done
 

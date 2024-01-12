@@ -60,8 +60,8 @@ if __name__ == "__main__":
         flops = [pair[1] for pair in data]
         plt.plot(mem_size, flops, marker='o', linestyle='-', label=label)  
 
-    plt.xlabel('Convergence Time')
-    plt.ylabel('Convergence Threshold')
+    plt.ylabel('Convergence Time')
+    plt.xlabel('Convergence Threshold')
     # for label, cache in caches:
     #     plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
     
