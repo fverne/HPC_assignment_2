@@ -2,6 +2,7 @@
  *
  */
 #include "gauss_seidel_omp.h"
+#include <omp.h>
 
 int gauss_seidel_omp(double ***u_curr, double ***f, int N, int max_iterations, double tolerance) {
     double delta = 2.0 / (N - 1);
@@ -11,8 +12,7 @@ int gauss_seidel_omp(double ***u_curr, double ***f, int N, int max_iterations, d
 
     for (iter = 0; iter < max_iterations; iter++) {
         int i, j, k;
-        #pragma omp for ordered(2) schedule(static, 1) private(i, j, k)
-        // #pragma omp for schedule(static, 1) private(i, j, k)
+        #pragma omp parallel for ordered(2) schedule(static, 1) private(i, j, k)
         for (i = 1; i < N - 1; i++) {
             for (j = 1; j < N - 1; j++) {
                 #pragma omp ordered depend(sink: i-1, j) depend(sink: i, j-1) 
@@ -23,8 +23,8 @@ int gauss_seidel_omp(double ***u_curr, double ***f, int N, int max_iterations, d
                                                   u_curr[i][j - 1][k] + u_curr[i][j + 1][k] +
                                                   u_curr[i][j][k - 1] + u_curr[i][j][k + 1] +
                                                   delta_2 * f[i][j][k]);
-                    #pragma omp ordered depend(source)
                 }
+                #pragma omp ordered depend(source)
             }
         }
     }

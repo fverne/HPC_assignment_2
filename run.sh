@@ -23,6 +23,7 @@ GRID_VALUES=(
   30
   40
   50
+  75
   100
   # 200
   # 300
@@ -43,36 +44,32 @@ THREAD_VALUES=(
 # go to source dir
 cd "src"
 # remove any trash from other runs
-rm *.bin *.vtk
+rm -f *.bin *.vtk
 # create logs dir if doesn't exist
 mkdir -p "logs"
 # remove previous logs
 rm -f logs/*.log
 
 # no real meaning behind these values for now
-ITERATIONS_DEF=100000
+ITERATIONS_DEF=10000
 TOLERANCE_DEF=0.0001
-GRID_DEF=100
+GRID_DEF=50 # temporary, change me
 
 for THREAD in "${THREAD_VALUES[@]}"; do
   export OMP_NUM_THREADS=${THREAD:-1}
   ./poisson_jomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/threads_jomp.log"
-  ./poisson_jomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >/dev/null 2>&1
+  ./poisson_gsomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/threads_gsomp.log"
   export OMP_NUM_THREADS=1
 done
 
 for GRID in "${GRID_VALUES[@]}"; do
   ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_j.log"
   ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_gs.log"
-  ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
 done
 
 for TOLERANCE in "${TOLERANCE_VALUES[@]}"; do
   ./poisson_j $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_j.log"
   ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_gs.log"
-  ./poisson_j $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
 done
 
 # zip logs
