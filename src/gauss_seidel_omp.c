@@ -1,7 +1,7 @@
 /* gauss_seidel_omp.c - Poisson problem in 3d with omp
  *
  */
-#include "gauss_seidel.h"
+#include "gauss_seidel_omp.h"
 
 int gauss_seidel_omp(double ***u_curr, double ***f, int N, int max_iterations, double tolerance) {
     double delta = 2.0 / (N - 1);

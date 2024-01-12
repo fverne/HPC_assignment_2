@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
   initialize_u(u_prev, N, start_T);
   initialize_f(f, N);
 
+  itime = omp_get_wtime();
+
 #ifdef _JACOBI
   iter = jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "jacobi";
@@ -83,6 +85,7 @@ int main(int argc, char *argv[]) {
   iter = jacobi_omp(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "jacobi_omp";
 #endif
+
 #ifdef _GAUSS_SEIDEL_OMP
   iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
   output_prefix = "gauss_seidel_omp";
@@ -98,7 +101,7 @@ int main(int argc, char *argv[]) {
   printf("Time:\t\t\t\t\t%f\n", exec_time);
   printf("Number of iterations:\t\t\t%d\n", iter);
   printf("Number of iterations per second:\t%f\n", iter / exec_time);
-  printf("Number of threads available:\t%d\n", omp_get_max_threads());
+  printf("Number of threads:\t%d\n", omp_get_max_threads());
 
   switch (output_type) {
   case 0:
