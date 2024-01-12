@@ -52,27 +52,42 @@ if __name__ == "__main__":
     args = parser.parse_args()
     caches = list(zip(['L1', 'L2', 'L3'], [args.L1, args.L2, args.L3]))
 
-    ax = plt.twinx()
+    fig, ax1 = plt.subplots()
 
-    width=1
+    ax2 = ax1.twinx()
+
+    width=0.5
     spacing=0.0
+    mem_size=[]
+    intermediate_mem_size=[]
+    flops=[]
+    speedups=[]
+    labels=[]
+    iterator = 0
     # read the data file and plot
     for file, label in zip(args.files, args.labels):
-        data = read_data(file)         
+        data = read_data(file)
         # plot the memory hierarchy diagram 
-        mem_size = [pair[0] for pair in data]
-        flops = [pair[1] for pair in data]
+        mem_size.append([pair[0]+spacing for pair in data])
+        flops.append([pair[1] for pair in data])
+        labels.append(label)
+        labels.append(label+" speedup")
+        intermediate_mem_size = [pair[0]+spacing*0.5 for pair in data]
         
         #amdahl
-        speedups = [flops[0]/time for time in flops]
-        plt.bar(mem_size, flops, width=width, align='center', label=label) 
-        plt.plot(mem_size, speedups, marker='o', linestyle='-', label=label+" speedup")
-        spacing+2
-     
+        speedups.append([flops[0][iterator]/times for times in flops[0]])
+        spacing+=0.5
+        iterator+=1
 
-    plt.xlabel('Number of Cores')
-    plt.ylabel('Runtime [Secs]')
-    ax.set_ylabel("Speedup")
+
+    ax1.bar(mem_size[0], flops[0], width=width, color='b', align='center')
+    ax1.bar(mem_size[1], flops[1], width=width, color='g', align='center')
+    ax2.plot(intermediate_mem_size, speedups[0], marker='o', linestyle='-')
+    ax2.plot(intermediate_mem_size, speedups[1], marker='o', linestyle='-')
+
+    ax1.set_xlabel('Number of Cores')
+    ax1.set_ylabel('Runtime [Secs]')
+    ax2.set_ylabel("Speedup")
 
     # for label, cache in caches:
     #     plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
@@ -89,7 +104,7 @@ if __name__ == "__main__":
     plt.gca().set_xlim(xlim)
 
     plt.grid()
-    plt.legend()
+    fig.legend(labels, loc='upper center', bbox_to_anchor=(0.5,1.15), ncol=1, bbox_transform=fig.transFigure)
     plt.title(args.title)
     # plt.show()
-    plt.savefig(args.name)
+    plt.savefig(args.name, bbox_inches="tight")
