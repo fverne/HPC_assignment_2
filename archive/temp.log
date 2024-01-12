@@ -1,0 +1,43 @@
+# pointer swap
+gbarlogin2(s232242) $ ./poisson_j 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   1.070297
+Number of iterations:                   5107
+Number of iterations per second:        4771.571182
+Wrote VTK file to jacobi_N50_T0.00010000_I10000.vtk.
+
+# just loop, without pointer swap
+gbarlogin2(s232242) $ ./poisson_j 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   1.488642
+Number of iterations:                   5107
+Number of iterations per second:        3430.643153
+Wrote VTK file to jacobi_N50_T0.00010000_I10000.vtk.
+
+# pointer swap, with OpenMP
+gbarlogin2(s232242) $ ./poisson_jomp 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   0.335071
+Number of iterations:                   5107
+Number of iterations per second:        15241.565837
+Wrote VTK file to jacobi_omp_N50_T0.00010000_I10000.vtk.
+
+# just loop, with OpenMP, thread num = 4
+gbarlogin2(s232242) $ ./poisson_jomp 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   1.007216
+Number of iterations:                   5107
+Number of iterations per second:        5070.412355
+Wrote VTK file to jacobi_omp_N50_T0.00010000_I10000.vtk.
