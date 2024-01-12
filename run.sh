@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# TODO: 
+# TODO:
 # - Add bsub
 # - Add bigger numbers
 
 TOLERANCE_VALUES=(
-  0.0000001
-  0.000001
+  0.00001
   0.0001
   0.001
 )
@@ -22,37 +21,41 @@ GRID_VALUES=(
 
 # go to source dir
 cd "src"
+# remove any trash from other runs
+rm *.bin *.vtk
 # create logs dir if doesn't exist
+rm -rf "logs"
 mkdir -p "logs"
 # remove previous logs
-rm -f "logs/*.log"
 
 # no real meaning behind these values for now
 ITERATIONS_DEF=10000
-TOLERANCE_DEF=0.00001
+TOLERANCE_DEF=0.0001
 GRID_DEF=50
 
 for GRID in "${GRID_VALUES[@]}"; do
-  ./poisson_j $GRID $ITERATIONS_DEF $GRID_DEF 0.0 4 >>"logs/grid_j.log"
-  ./poisson_gs $GRID $ITERATIONS_DEF $GRID_DEF 0.0 4 >>"logs/grid_gs.log"
-  ./poisson_j $GRID $ITERATIONS_DEF $GRID_DEF 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $GRID $ITERATIONS_DEF $GRID_DEF 0.0 3 >/dev/null 2>&1
+  ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_gs.log"
+  ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_j.log"
+  ./poisson_gs $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
+  ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 3 >/dev/null 2>&1
 done
 
 for TOLERANCE in "${TOLERANCE_VALUES[@]}"; do
-  ./poisson_j $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_j.log"
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_gs.log"
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
-  ./poisson_gs $TOLERANCE_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
+  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_gs.log"
+  ./poisson_j  $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 4 >>"logs/tolerance_j.log"
+  ./poisson_gs $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
+  ./poisson_j $GRID_DEF $ITERATIONS_DEF $TOLERANCE 0.0 3 >/dev/null 2>&1
+  # add OMP here
 done
 
 # zip logs
 zip -r "logs_$(date +'%Y%m%d_%H%M%S').zip" logs
 
+echo "$(pwd)"
 # create output dirs
-mkdir -p "ouput/vtk"
-mkdir -p "ouput/bin"
-mkdir -p "ouput/zip"
+mkdir -p "output/vtk"
+mkdir -p "output/bin"
+mkdir -p "output/zip"
 
 # move output files to the output dirs
 mv *.zip "output/zip"
