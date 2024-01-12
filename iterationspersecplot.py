@@ -65,6 +65,8 @@ if __name__ == "__main__":
     # for label, cache in caches:
     #     plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
     
+    plt.yscale('log')
+
     if args.log: 
         plt.xscale('log')
     
