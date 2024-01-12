@@ -14,10 +14,13 @@ import argparse
 def read_data(datafile: str):
     """Read data from datafile and return a list of lists."""
     data = []
-    with open(datafile, 'r') as f:
+    with open(datafile, 'r') as f:        
         for line in f:
+            if line[0] == "#":
+                continue
+
             parts = line.strip().split()
-            data_point = [float(parts[0]), float(parts[1])]
+            data_point = [float(parts[4]), float(parts[2])]
             data.append(data_point)
     return data
 
@@ -49,28 +52,37 @@ if __name__ == "__main__":
     args = parser.parse_args()
     caches = list(zip(['L1', 'L2', 'L3'], [args.L1, args.L2, args.L3]))
 
+    ax = plt.subplot(111)
+
     # read the data file and plot
-    for file, label in zip(args.files, args.labels):
-        data = read_data(file) 
+    for file in args.files:
+        data = read_data(file)         
         # plot the memory hierarchy diagram 
         mem_size = [pair[0] for pair in data]
         flops = [pair[1] for pair in data]
-        plt.plot(mem_size, flops, marker='o', linestyle='-', label=label)  
 
-    plt.xlabel('Number of Cores')
-    plt.ylabel('Speedup')
-    for label, cache in caches:
-        plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
+        #amdahl
+        speedups = [flops[0]/time for time in flops]
+        ax.bar(mem_size, flops, width=0.2, color='red', align='center', label="speed") 
+        ax2 = ax.twinx()
+        ax2.plot(mem_size, speedups, marker='o', color='pink', linestyle='-', label=f"speedup")  
+
+    ax.set_xlabel('Number of Cores')
+    ax.set_ylabel('Runtime [Secs]')
+    ax2.set_ylabel("Speedup")
+
+    # for label, cache in caches:
+    #     plt.axvline(x=cache, color='r', linestyle='--', linewidth=1, label=label)
     
     if args.log: 
         plt.xscale('log')
     
     xlim = plt.xlim()
     plt.savefig(args.name) # https://stackoverflow.com/questions/68558593/how-to-get-tick-labels-in-matplotlib-prior-to-calling-plt-show
-    plt.xticks(
-        ticks= list(plt.gca().get_xticks()) + [cache for _, cache in caches], 
-        labels= plt.gca().get_xticklabels(minor=False) + [label for label, _ in caches]
-    )
+    # plt.xticks(
+    #     ticks= list(plt.gca().get_xticks()) + [cache for _, cache in caches], 
+    #     labels= plt.gca().get_xticklabels(minor=False) + [label for label, _ in caches]
+    # )
     plt.gca().set_xlim(xlim)
 
     plt.grid()

@@ -1,6 +1,6 @@
 python3 convergeplot.py \
-    "src/data/tolerance_j_thno4.dat" \
-    "src/data/tolerance_gs_thno4.dat" \
+    "src/data/tolerance_j.dat" \
+    "src/data/tolerance_gs.dat" \
     -l \
     "jacobi" \
     "gauss" \
@@ -9,10 +9,18 @@ python3 convergeplot.py \
   
 
 python3 iterationspersecplot.py \
-    "src/data/grid_j_thno4.dat" \
-    "src/data/grid_gs_thno4.dat" \
+    "src/data/grid_j.dat" \
+    "src/data/grid_gs.dat" \
     -l \
     "jacobi" \
     "gauss" \
     -n plots/iterationspersecplot.png \
     -t "Iterations Per Seconds, Whole Grid"
+
+python3 speedupplot.py \
+    "src/data/threads_jomp.dat" \
+    -l \
+    "jacobi (OMP) Baseline" \
+    "jacobi (OMP) Speedup" \
+    -n plots/speedupplot.png \
+    -t "Speedup Comparison (N = 100)"

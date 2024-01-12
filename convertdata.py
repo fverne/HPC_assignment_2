@@ -4,8 +4,7 @@ import regex as re
 filenames= [
     'grid_j',
     'grid_gs',
-    # 'grid_j_omp',
-    # 'grid_gs_omp',
+    'threads_jomp',
     'tolerance_j',
     'tolerance_gs'
     ]
@@ -32,6 +31,6 @@ for filename in filenames:
     threads = list(filter(None, threads))
     iterseconds = list(filter(None, iterseconds))
 
-    file = open(f'src/data/{filename}_thno{threads[0][0][1]}.dat', 'w+')
+    file = open(f'src/data/{filename}.dat', 'w+')
     file.write("#N\ttolerance\ttime\titerseconds\tthreads\n")
     file.write("\n".join(f"{i[0][1]}\t{j[0][1]}\t{k[0][1]}\t{l[0][1]}\t{m[0][1]}" for i, j, k, l, m in zip(n, tolerance, time, iterseconds, threads)))

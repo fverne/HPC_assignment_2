@@ -1,13 +1,13 @@
 #!/bin/bash
 #BSUB -J 4cores
-#BSUB -o src/1node4cores.out
+#BSUB -o src/output/1node4cores.out
 #BSUB -q hpcintro
-#BSUB -W 6
+#BSUB -W 20
 #BSUB -R "rusage[mem=512MB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -n 4
+#BSUB -n 24
 
-export OMP_NUM_THREADS=${LSB_DJOB_NUMPROC:-1}
+export OMP_NUM_THREADS=1
 
 
 TOLERANCE_VALUES=(
@@ -29,6 +29,15 @@ GRID_VALUES=(
   # 400
 )
 
+THREAD_VALUES=(
+  1
+  2
+  4
+  8
+  16
+  24
+)
+
 # go to source dir
 cd "src"
 # create logs dir if doesn't exist
@@ -37,9 +46,16 @@ mkdir -p "logs"
 rm -f logs/*.log
 
 # no real meaning behind these values for now
-ITERATIONS_DEF=10000
+ITERATIONS_DEF=1000050
 TOLERANCE_DEF=0.00001
-GRID_DEF=50
+GRID_DEF=100
+
+for THREAD in "${THREAD_VALUES[@]}"; do
+  export OMP_NUM_THREADS=${THREAD:-1}
+  ./poisson_jomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/threads_jomp.log"
+  ./poisson_jomp $GRID_DEF $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >/dev/null 2>&1
+  export OMP_NUM_THREADS=1
+done
 
 for GRID in "${GRID_VALUES[@]}"; do
   ./poisson_j $GRID $ITERATIONS_DEF $TOLERANCE_DEF 0.0 4 >>"logs/grid_j.log"
