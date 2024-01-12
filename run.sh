@@ -2,7 +2,7 @@
 #BSUB -J 4cores
 #BSUB -o src/output/1node4cores.out
 #BSUB -q hpcintro
-#BSUB -W 20
+#BSUB -W 30
 #BSUB -R "rusage[mem=512MB]"
 #BSUB -R "span[hosts=1]"
 #BSUB -n 24
@@ -13,8 +13,8 @@ export OMP_NUM_THREADS=1
 TOLERANCE_VALUES=(
   0.001
   0.0001
+  0.00001
   0.000001
-  0.0000001
 )
 
 GRID_VALUES=(
@@ -34,7 +34,9 @@ THREAD_VALUES=(
   2
   4
   8
+  12
   16
+  20
   24
 )
 
@@ -46,8 +48,8 @@ mkdir -p "logs"
 rm -f logs/*.log
 
 # no real meaning behind these values for now
-ITERATIONS_DEF=1000050
-TOLERANCE_DEF=0.00001
+ITERATIONS_DEF=100000
+TOLERANCE_DEF=0.0001
 GRID_DEF=100
 
 for THREAD in "${THREAD_VALUES[@]}"; do

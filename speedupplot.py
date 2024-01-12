@@ -65,7 +65,7 @@ if __name__ == "__main__":
         speedups = [flops[0]/time for time in flops]
         ax.bar(mem_size, flops, width=0.2, color='red', align='center', label="speed") 
         ax2 = ax.twinx()
-        ax2.plot(mem_size, speedups, marker='o', color='pink', linestyle='-', label=f"speedup")  
+        ax2.plot(mem_size, speedups, marker='o', color='pink', linestyle='-', label="speedup")  
 
     ax.set_xlabel('Number of Cores')
     ax.set_ylabel('Runtime [Secs]')
@@ -86,7 +86,10 @@ if __name__ == "__main__":
     plt.gca().set_xlim(xlim)
 
     plt.grid()
-    plt.legend(args.labels)
+    ax.legend(args.labels, loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3, fancybox=True, shadow=True)
+    ax2.legend(args.labels, loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3, fancybox=True, shadow=True)
     plt.title(args.title)
     # plt.show()
     plt.savefig(args.name)

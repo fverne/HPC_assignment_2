@@ -5,7 +5,7 @@ python3 convergeplot.py \
     "jacobi" \
     "gauss" \
     -n plots/convergeplot.png \
-    -t "Convergence Comparison" \
+    -t "Convergence Comparison (N=100)" \
   
 
 python3 iterationspersecplot.py \
