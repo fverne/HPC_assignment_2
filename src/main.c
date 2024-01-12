@@ -42,15 +42,15 @@ int main(int argc, char *argv[]) {
   double ***f = NULL;
   double itime, ftime, exec_time;
   /* get the parameters from the command line */
-  N = atoi(argv[1]);         // grid size, the number of total
-                             // grid points in one dimension
-  iter_max = atoi(argv[2]);  // max. no. of iterations
-  tolerance = atof(argv[3]); // tolerance
-  start_T = atof(argv[4]);   // start T for all inner grid points
+  N = atoi(argv[1]);         /* grid size, the number of total */
+                             /* grid points in one dimension */
+  iter_max = atoi(argv[2]);  /* max. no. of iterations */
+  tolerance = atof(argv[3]); /* tolerance */
+  start_T = atof(argv[4]);   /* start T for all inner grid points */
   if (argc == 6) {
-    output_type = atoi(argv[5]); // ouput type
+    output_type = atoi(argv[5]); /* ouput type */
   }
-  // allocate memory
+  /* allocate memory */
   if ((u_curr = malloc_3d(N, N, N)) == NULL) {
     perror("array u: allocation failed");
     exit(-1);
@@ -64,27 +64,27 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
-  // Initialize the arrays
+  /* Initialize the arrays */
   initialize_u(u_curr, N, start_T);
   initialize_u(u_prev, N, start_T);
   initialize_f(f, N);
-
-  itime = omp_get_wtime();
 
 #ifdef _JACOBI
   iter = jacobi(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "jacobi";
 #endif
+
 #ifdef _GAUSS_SEIDEL
-  iter = gauss_seidel(u_curr, u_prev, f, N, iter_max, tolerance);
+  iter = gauss_seidel(u_curr, f, N, iter_max, tolerance);
   output_prefix = "gauss_seidel";
 #endif
+
 #ifdef _JACOBI_OMP
   iter = jacobi_omp(u_curr, u_prev, f, N, iter_max, tolerance);
   output_prefix = "jacobi_omp";
 #endif
 #ifdef _GAUSS_SEIDEL_OMP
-  iter = gauss_seidel_omp(u_curr, u_prev, f, N, iter_max, tolerance);
+  iter = gauss_seidel_omp(u_curr, f, N, iter_max, tolerance);
   output_prefix = "gauss_seidel_omp";
 #endif
 
@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
   printf("Time:\t\t\t\t\t%f\n", exec_time);
   printf("Number of iterations:\t\t\t%d\n", iter);
   printf("Number of iterations per second:\t%f\n", iter / exec_time);
+  printf("Number of threads available:\t%d\n", omp_get_max_threads());
 
   switch (output_type) {
   case 0:
@@ -121,10 +122,10 @@ int main(int argc, char *argv[]) {
     break;
   }
 
-  // de-allocate memory
+  /* De-allocate memory */
   free_3d(u_curr);
   free_3d(u_prev);
   free_3d(f);
-  
+
   return (0);
 }

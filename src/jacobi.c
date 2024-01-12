@@ -11,6 +11,7 @@ int jacobi(double ***u_curr, double ***u_prev, double ***f, int N,
   double fraction = (1.0 / 6);
   double delta_2 = pow2(delta);
   double distance;
+  double u_prev_value;
   do {
     distance = 0;
     for (int i = 1; i < N - 1; i++)
