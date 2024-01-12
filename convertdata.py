@@ -6,6 +6,9 @@ filenames= [
     'grid_gs',
     'threads_jomp',
     'threads_gsomp',
+    'rawO0',
+    'rawOfast',
+    'rawO3',
     'tolerance_j',
     'tolerance_gs'
     ]

@@ -1,73 +1,47 @@
-#!/bin/sh
-### General options
-### -- set the job Name --
-#BSUB -J OpenMPjob
-### -- ask for number of cores (default: 1) --
-#BSUB -n 32
-### -- specify that the cores MUST BE on a single host! It's a SMP job! --
+#!/bin/bash
+#BSUB -J 4cores
+#BSUB -o src/output/1node4cores.out
+#BSUB -q hpcintro
+#BSUB -W 30
+#BSUB -R "rusage[mem=512MB]"
 #BSUB -R "span[hosts=1]"
-### -- set walltime limit: hh:mm --
-#BSUB -W 16:00 
-### -- specify CPU model
-##BSUB -R "select[model == XeonE5_2660v4]"
-### -- specify that we need 4GB of memory per core/slot -- 
-#BSUB -R "rusage[mem=4GB]"
-### -- set the email address --
-# please uncomment the following line and put in your e-mail address,
-# if you want to receive e-mail notifications on a non-default address
-#BSUB -u s232242@dtu.dk
-### -- send notification at start --
-#BSUB -B
-### -- send notification at completion--
-#BSUB -N
-### -- Specify the output and error file. %J is the job-id -- 
-### -- -o and -e mean append, -oo and -eo mean overwrite -- 
-#BSUB -o ./data_%J/Output.out
-#BSUB -e ./data_%J/Output.err 
+#BSUB -n 24
 
-# set OMP_NUM_THREADS _and_ export! 
-# OMP_NUM_THREADS=$LSB_DJOB_NUMPROC 
-# export OMP_NUM_THREADS 
-# ------------------------------- Program_name_and_options 
+THREAD_NUMS="2 4 8 12 16 20 24"
+COMPILER_OPTIONS=(
+    # "-O0"
+    # "-O3 -funroll-loops"
+    "-Ofast -funroll-loops"
+)
 
-THRED_NUMS="1 2 4 8 16 32" 
 BINARY="./src/poisson_jomp"
-GRID_SIZE=20
+GRID_SIZE=100
 MAX_ITERATIONS=10000
-TOLERANCE=0.00001
-GRID_DEF=5
+TOLERANCE=0.0001
 
 # list CPU info
 lscpu
-mkdir -p "data_${LSB_JOBID}"
+dir="data_${LSB_JOBNAME}_${LSB_JOBID}"
+mkdir -p ${dir}
 
-RAW="data_${LSB_JOBID}/raw.log"
-> ${RAW}
+RAW="${dir}/raw.log"
+>${RAW}
 
-for THRED_NUM in $THRED_NUMS
-do 
-    export OMP_NUM_THREADS=$THRED_NUM 
-    echo "OMP_NUM_THREADS=$OMP_NUM_THREADS" 
-    ${BINARY} ${GRID_SIZE} ${MAX_ITERATIONS} ${TOLERANCE} 0 >> ${RAW}
+for OPTION in "${COMPILER_OPTIONS[@]}"; do
+    cd src
+    echo -e "Option: $OPTION"
+    module load gcc
+    make OPT=" -g $OPTION -fopenmp" -B
+    cd ..
+    for THREAD_NUM in $THREAD_NUMS; do
+        export OMP_NUM_THREADS=$THREAD_NUM
+        echo "OMP_NUM_THREADS=$OMP_NUM_THREADS"
+        ${BINARY} ${GRID_SIZE} ${MAX_ITERATIONS} ${TOLERANCE} 0 >>${RAW}_"${OPTION}"
+    done
+
 done
 
 # extract data
-TIME="data_${LSB_JOBID}/time.dat"
-> ${TIME}
-while read line; do
-    if [[ " $line " =~ "Number of threads:" ]] 
-        then
-            value=${line##*N:}
-            value=$(echo "$value" | awk '{print $1}')
-            echo "$value" >> "${TIME}"
-            echo -e "\t" >> "${TIME}"
-    elif [[ " $line " =~ "Time:" ]] 
-        then
-            value=${line##*Time:}
-            value=$(echo "$value" | awk '{print $1}')
-            echo "$value" >> "${TIME}"
-            echo -e "\n" >> "${TIME}"
-    fi
-done <${RAW}
+TIME="${dir}/time.dat"
 
-
+python3 extractdata.py ${RAW} "Number of threads" "Number of iterations per second" >${TIME}
