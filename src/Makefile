@@ -22,7 +22,7 @@ CC	= gcc
 # add O3 or other optimization here
 XOPTS = 
 DEFS	= 
-OPT	= -g -fopenmp
+OPT	= -O3 -g -fopenmp
 IPO	= 
 ISA	= 
 CHIP	= 
