@@ -1,0 +1,85 @@
+# Num of threads: 4
+
+# Naive 
+
+./poisson_jomp 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   0.342457
+Number of iterations:                   5107
+Number of iterations per second:        14912.821033
+Wrote VTK file to jacobi_omp_N50_T0.00010000_I10000.vtk.
+
+./poisson_jomp 100 10000 0.0001 0 4
+=====================Info=====================
+N:                                      100
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   4.717731
+Number of iterations:                   10000
+Number of iterations per second:        2119.663060
+Wrote VTK file to jacobi_omp_N100_T0.00010000_I10000.vtk.
+
+./poisson_jomp 150 10000 0.0001 0 4
+=====================Info=====================
+N:                                      150
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   27.834430
+Number of iterations:                   10000
+Number of iterations per second:        359.267275
+Wrote VTK file to jacobi_omp_N150_T0.00010000_I10000.vtk.
+
+./poisson_jomp 200 10000 0.0001 0 4
+=====================Info=====================
+N:                                      200
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   72.403428
+Number of iterations:                   10000
+Number of iterations per second:        138.115008
+Wrote VTK file to jacobi_omp_N200_T0.00010000_I10000.vtk.
+
+# First-Touch 
+
+./poisson_jomp 50 10000 0.0001 0 4
+=====================Info=====================
+N:                                      50
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   0.331298
+Number of iterations:                   5107
+Number of iterations per second:        15415.139174
+Wrote VTK file to jacobi_omp_N50_T0.00010000_I10000.vtk.
+
+./poisson_jomp 100 10000 0.0001 0 4
+=====================Info=====================
+N:                                      100
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   4.700262
+Number of iterations:                   10000
+Number of iterations per second:        2127.540850
+Wrote VTK file to jacobi_omp_N100_T0.00010000_I10000.vtk.
+
+./poisson_jomp 150 10000 0.0001 0 4
+=====================Info=====================
+N:                                      150
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   24.082129
+Number of iterations:                   10000
+Number of iterations per second:        415.245681
+Wrote VTK file to jacobi_omp_N150_T0.00010000_I10000.vtk.
+
+./poisson_jomp 200 10000 0.0001 0 4
+=====================Info=====================
+N:                                      200
+Tolerance:                              0.000100
+Max iterations:                         10000
+Time:                                   51.189431
+Number of iterations:                   10000
+Number of iterations per second:        195.352825
+Wrote VTK file to jacobi_omp_N200_T0.00010000_I10000.vtk.
